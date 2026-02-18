@@ -163,7 +163,12 @@ export const Game = () => {
             ))}
           </select>
         </label>
-        <button type="button" className="reset-button" onClick={reset}>
+        <button
+          type="button"
+          className="reset-button"
+          onClick={reset}
+          disabled={winner === null}
+        >
           Restart
         </button>
       </div>
