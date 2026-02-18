@@ -136,8 +136,15 @@ export const Game = () => {
       {/* <OnBoarding /> */}
 
       {winner && winner !== "draw" && showCelebration && (
-        <div className="celebration-overlay" aria-live="polite">
-          <div className="celebration-content">
+        <div
+          className="celebration-overlay"
+          aria-live="polite"
+          onClick={() => setShowCelebration(false)}
+        >
+          <div
+            className="celebration-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <img src={CELEBRATION_GIF} alt="" className="celebration-gif" />
             <p className="celebration-text">Player {winner} wins!</p>
           </div>
