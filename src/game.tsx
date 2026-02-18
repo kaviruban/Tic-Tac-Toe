@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 
 import "./App.css";
 
@@ -78,18 +78,29 @@ export const Game = () => {
   const winLine = winnerResult.line;
 
   const [showCelebration, setShowCelebration] = useState(false);
+  const celebrationRef = useRef<number | undefined>(undefined);
+  const shouldShowRef = useRef(false);
 
   useEffect(() => {
+    if (celebrationRef.current) clearTimeout(celebrationRef.current);
+
     if (winner && winner !== "draw") {
-      setShowCelebration(true);
-      const t = setTimeout(
+      shouldShowRef.current = true;
+      // Schedule state update asynchronously to avoid cascading renders
+      queueMicrotask(() => setShowCelebration(true));
+      celebrationRef.current = window.setTimeout(
         () => setShowCelebration(false),
         CELEBRATION_DURATION_MS,
       );
-      return () => clearTimeout(t);
     } else {
-      setShowCelebration(false);
+      shouldShowRef.current = false;
+      // Schedule state update asynchronously to avoid cascading renders
+      queueMicrotask(() => setShowCelebration(false));
     }
+
+    return () => {
+      if (celebrationRef.current) clearTimeout(celebrationRef.current);
+    };
   }, [winner]);
 
   const handleDimensionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
